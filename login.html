@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avi Esport - Login</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="registration-form">
+            <div class="logo">
+                <h1>AVI ESPORT</h1>
+            </div>
+            <h2>Login</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <input type="email" id="email" placeholder="Email" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="password" placeholder="Password" required>
+                </div>
+                <button type="submit" class="register-btn">Login</button>
+            </form>
+            <div class="login-link">
+                <p>Don't have an account? <a href="registration.html">Register here</a></p>
+                <p><a href="index.html">← Back to Home</a></p>
+            </div>
+        </div>
+    </div>
+    <script>
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzTyw3NL2rpuNBl6tMlxjUW3ObALrJf5ZJZaR0o3u_2hb4M0pdPGG-KZMLTjH06XdPQsw/exec';
+        
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            console.log('Login attempt:', email);
+            
+            // Check localStorage first
+            const userData = localStorage.getItem('aviEsportUser');
+            console.log('LocalStorage data:', userData);
+            
+            if (userData) {
+                const parsedData = JSON.parse(userData);
+                console.log('Parsed data:', parsedData);
+                
+                if (parsedData.email === email && parsedData.password === password) {
+                    localStorage.setItem('currentUser', JSON.stringify(parsedData));
+                    alert('Login successful!');
+                    window.location.href = 'dashboard.html';
+                    return;
+                }
+            }
+            
+            // Try Google Sheets
+            try {
+                console.log('Checking Google Sheets...');
+                const response = await fetch(`${GOOGLE_SCRIPT_URL}?action=login&email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`);
+                const result = await response.json();
+                console.log('Google Sheets response:', result);
+                
+                if (result.success && result.user) {
+                    localStorage.setItem('currentUser', JSON.stringify(result.user));
+                    alert('Login successful!');
+                    window.location.href = 'dashboard.html';
+                    return;
+                }
+            } catch (error) {
+                console.log('Google Sheets error:', error);
+            }
+            
+            alert('Login failed! Check your email/password or register first.');
+        });
+        
+        // Debug function - check what's in localStorage
+        function checkStorage() {
+            const data = localStorage.getItem('aviEsportUser');
+            console.log('Current stored data:', data);
+            if (data) {
+                console.log('Parsed:', JSON.parse(data));
+            } else {
+                console.log('No data found - please register first!');
+            }
+        }
+        
+        // Call on page load
+        checkStorage();
+    </script>
+</body>
+</html>

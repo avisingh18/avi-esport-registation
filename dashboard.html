@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avi Esport - Dashboard</title>
+    <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+    <div class="container">
+        <div class="dashboard-form">
+            <div class="logo">
+                <h1>AVI ESPORT</h1>
+            </div>
+            <h2>Select Match Type</h2>
+            <div class="match-options">
+                <div class="match-card" onclick="selectMatch('solo')">
+                    <div class="match-icon">👤</div>
+                    <h3>Solo Match</h3>
+                    <p>Play alone against others</p>
+                </div>
+                <div class="match-card" onclick="selectMatch('duo')">
+                    <div class="match-icon">👥</div>
+                    <h3>Duo Match</h3>
+                    <p>Team up with a partner</p>
+                </div>
+                <div class="match-card" onclick="selectMatch('squad')">
+                    <div class="match-icon">👨‍👩‍👧‍👦</div>
+                    <h3>Squad Match</h3>
+                    <p>Play with your squad</p>
+                </div>
+            </div>
+            <button class="apply-btn" id="applyBtn" disabled>Apply for Match</button>
+        </div>
+    </div>
+    <script src="dashboard.js"></script>
+</body>
+</html>

