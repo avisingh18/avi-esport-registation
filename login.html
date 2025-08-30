@@ -39,23 +39,7 @@
             
             console.log('Login attempt:', email);
             
-            // Check localStorage first
-            const userData = localStorage.getItem('aviEsportUser');
-            console.log('LocalStorage data:', userData);
-            
-            if (userData) {
-                const parsedData = JSON.parse(userData);
-                console.log('Parsed data:', parsedData);
-                
-                if (parsedData.email === email && parsedData.password === password) {
-                    localStorage.setItem('currentUser', JSON.stringify(parsedData));
-                    alert('Login successful!');
-                    window.location.href = 'dashboard.html';
-                    return;
-                }
-            }
-            
-            // Try Google Sheets
+            // Login via Google Sheets only
             try {
                 console.log('Checking Google Sheets...');
                 const response = await fetch(`${GOOGLE_SCRIPT_URL}?action=login&email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`);
@@ -75,19 +59,7 @@
             alert('Login failed! Check your email/password or register first.');
         });
         
-        // Debug function - check what's in localStorage
-        function checkStorage() {
-            const data = localStorage.getItem('aviEsportUser');
-            console.log('Current stored data:', data);
-            if (data) {
-                console.log('Parsed:', JSON.parse(data));
-            } else {
-                console.log('No data found - please register first!');
-            }
-        }
-        
-        // Call on page load
-        checkStorage();
+        console.log('Login page loaded - Google Sheets only mode');
     </script>
 </body>
 </html>
