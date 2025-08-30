@@ -61,6 +61,7 @@
             const password = document.getElementById('password').value;
             const gamertag = document.getElementById('gamertag').value;
             
+            // Registration data
             const userData = {
                 action: 'register',
                 phone: phone,
@@ -70,22 +71,29 @@
                 timestamp: new Date().toISOString()
             };
             
-            // Save to localStorage
-            localStorage.setItem('aviEsportUser', JSON.stringify(userData));
-            
-            // Send to Google Sheets (fire and forget)
-            fetch(GOOGLE_SCRIPT_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(userData)
-            }).then(() => {
-                console.log('Data sent to Google Sheets');
-            }).catch(error => {
-                console.log('Google Sheets error (but data saved locally):', error);
-            });
+            // Send to Google Sheets using GET method
+            try {
+                const params = new URLSearchParams({
+                    action: 'register',
+                    phone: phone,
+                    email: email,
+                    password: password,
+                    gamertag: gamertag,
+                    name: gamertag
+                });
+                
+                const response = await fetch(`${GOOGLE_SCRIPT_URL}?${params}`);
+                const result = await response.json();
+                console.log('Google Sheets response:', result);
+                
+                if (result.success) {
+                    console.log('Data successfully saved to Google Sheets!');
+                } else {
+                    console.log('Google Sheets error:', result.error);
+                }
+            } catch (error) {
+                console.log('Network error:', error);
+            }
             
             alert('Registration successful! ✅');
             window.location.href = 'login.html';
